@@ -8,20 +8,21 @@ use XML::Simple;
 our $ENCODE;
 $ENCODE = 1 if eval { require Encode };
 
-our $VERSION = 0.03;
+our $VERSION = 0.04;
 our $AUTOLOAD;
 use constant GAPI => 'http://www.google.com/ig/api?weather=';
 
 sub new {
-	my $class = shift;
-	my $self = {};
+	my ( $class, $area, $opt ) = @_;
+    my $self = {};
 	bless ($self,$class);
+
 	$self->{xs} = XML::Simple->new;
-#	$self->{xs} = XML::Parser->new;
 
-	return $self unless @_;
+	$self->language($opt->{language}) if defined $opt->{language};
 
-	my $area = shift;
+	return $self unless $area;
+
 	if ( $area =~ /^\d{5}?$/ ) {
 		$self->zip($area);
 		return $self;
@@ -30,7 +31,16 @@ sub new {
 	$self->city($area);
 	return $self;
 }
-	
+
+sub _location_url {
+    my ( $self, $loc ) = @_;
+    # TODO This should be modified to support, i.e., a hash of parameters.
+    my $url = GAPI . $loc;
+    my $lang = $self->language;
+    $url .= "&hl=$lang" if $lang;
+    return $url;
+}
+
 sub zip {
 	my $self = shift;
 	my $zip = shift;
@@ -39,11 +49,11 @@ sub zip {
 		return;
 	}
 
-	my $xml = get(GAPI.$zip);
+	my $xml = get($self->_location_url($zip));
 	$xml = Encode::decode_utf8($xml,$Encode::FB_DEFAULT) if $ENCODE;
 	my $w = $self->{xs}->xml_in($xml) or return;
 #	my $w = $self->{xs}->parse($xml) or return;
-	
+
 	$self->_parse($w);
 	return 1;
 }
@@ -51,10 +61,10 @@ sub zip {
 sub city {
 	my $self = shift;
 	my $loc = shift;
-	
+
 	# Encode the location for URL
 	$loc =~ s/([^\w()’*~!.-])/sprintf '%%%02x', ord $1/eg;
-	my $xml = get(GAPI.$loc);
+	my $xml = get($self->_location_url($loc));
 	if ( $ENCODE ) {
 		$xml = Encode::decode_utf8($xml,$Encode::FB_DEFAULT);
 	} else {
@@ -65,7 +75,28 @@ sub city {
 	$self->_parse($w);
 	return 1;
 }
-	
+
+sub language {
+	my $self = shift;
+
+	return $self->{lang} unless @_;
+    my $lang = shift;
+
+	# List of supported languages according to
+	# http://toolbar.google.com/buttons/apis/howto_guide.html#multiplelanguages
+	my %languages = map { $_ => 1 } qw/
+	    en da de es fi fr it ja ko nl no pt-BR ru sv zh-CN zh-TW
+	/;
+
+	unless (defined $languages{$lang})
+	{
+	    warn qq|"$lang" is not a supported ISO language code.\n|;
+	    return $self->{lang};
+	}
+
+	$self->{lang} = $lang;
+}
+
 sub current_conditions {
 	my $self = shift;
 	return $self->{current} unless @_;
@@ -122,7 +153,7 @@ sub forecast_conditions {
 	return $out[0] unless $#out;
 	return @out;
 }
-		
+
 sub forecast_information {
 	my $self = shift;
 	return $self->{info} unless @_;
@@ -140,7 +171,7 @@ sub forecast_information {
 	return $out[0] unless $#out;
 	return @out;
 }
-	
+
 sub err {
 	my $self = shift;
 	$self->{ERR} = shift if @_;
@@ -179,10 +210,10 @@ sub AUTOLOAD {
 	my $self = shift;
 
 	# Alias some things
-	
+
 	my $name = $AUTOLOAD;
 	$name =~ s/.+:://;
-	
+
 	# This should prevent warnings of undefined @_
 	@_ = () unless @_;
 
@@ -193,7 +224,7 @@ sub AUTOLOAD {
 	# Day of week shortcut
 	return $self->forecast_conditions($name,@_) if
 		$name =~ /^(Today|Tomorrow)|((Mon|Tue|Wed|Thu|Fri|Sat|Sun)(\w*day)?)$/i;
-	
+
 	# Others are considered access methods to current_conditions
 	return $self->current($name);
 }
@@ -226,11 +257,13 @@ Version 0.03
  ## Initialize the module
  $gw = new Weather::Google(90210); # Zip code
  $gw = new Weather::Google('Beverly Hills, CA'); # City name
+ $gw = new Weather::Google('Herne, Germany',{language => 'de'});
 
  # Or
  $gw = new Weather::Google;
  $gw->zip(90210); # Zip code
  $gw->city('Beverly Hills, CA'); # City name
+ $gw->language('de'); # Localization
 
  ## Get some current information
 
@@ -276,7 +309,16 @@ Weather::Google provides a simple interface to Google's Weather API.
 =item new
 
 Initializes and returns a Weather::Google object.  Optionally takes a
-Zip/postal code or city name as an argument.
+Zip/postal code or city name as an argument, optionally followed by a hashref
+of additional options:
+
+=over
+
+=item language
+
+Have a look at the language() method's description below.
+
+=back
 
 =cut
 
@@ -291,6 +333,19 @@ integer as an argument.  Returns 1 on success.
 
 Sets the city for the Weather::Google object.  Takes a string as an argument.
 Returns 1 if successful.
+
+=cut
+
+=item language
+
+Optionally takes an ISO language code as an argument (i.e. "en", "de") to set
+the language that is passed to the weather query for proper localization.
+(Default: "en")
+
+Supported language codes: "en", "da", "de", "es", "fi", "fr", "it", "ja",
+"ko", "nl", "no", "pt-BR", "ru", "sv", "zh-CN", "zh-TW"
+
+Returns the currently set ISO language code.
 
 =cut
 
