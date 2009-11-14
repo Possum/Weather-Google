@@ -2,7 +2,7 @@ NAME
     Weather::Google - Perl interface to Google's Weather API
 
 VERSION
-    Version 0.03
+    Version 0.04
 
 SYNOPSIS
      use Weather::Google;
