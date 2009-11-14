@@ -11,5 +11,6 @@ t/01init.t
 t/02current_conditions.t
 t/03forecast_conditions.t
 t/04forecast_information.t
+t/05language.t
 t/pod-coverage.t
 t/pod.t
