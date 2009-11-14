@@ -15,11 +15,13 @@ SYNOPSIS
      ## Initialize the module
      $gw = new Weather::Google(90210); # Zip code
      $gw = new Weather::Google('Beverly Hills, CA'); # City name
+     $gw = new Weather::Google('Herne, Germany',{language => 'de'});
 
      # Or
      $gw = new Weather::Google;
      $gw->zip(90210); # Zip code
      $gw->city('Beverly Hills, CA'); # City name
+     $gw->language('de'); # Localization
 
      ## Get some current information
 
@@ -34,8 +36,8 @@ SYNOPSIS
      @info = ($gw->temp_f, $gw->temp_c, $gw->humidity, $gw->wind_condition);
 
      ## Forecast
- 
-     print "Today's high: ", $gw->forecast(0,'high');
+     
+ print "Today's high: ", $gw->forecast(0,'high');
      print "Today's high: ", $gw->forecast('Today','high');
      print "Today's high: ", $gw->today('high');
 
@@ -43,8 +45,8 @@ SYNOPSIS
      print "Tomorrow's high: ", $gw->forecast(1,'high');
      print "Tomorrow's high: ", $gw->forecast('Tue','high');
      print "Tomorrow's high: ", $gw->tue('high');
- 
-     ## Forecast information:
+     
+ ## Forecast information:
      print "Forecast for ". $gw->info('city'). "made at ".
             $gw->info('current_date_time');
 
@@ -53,7 +55,11 @@ DESCRIPTION
 
 METHODS
     new Initializes and returns a Weather::Google object. Optionally takes a
-        Zip/postal code or city name as an argument.
+        Zip/postal code or city name as an argument, optionally followed by
+        a hashref of additional options:
+
+        language
+            Have a look at the language() method's description below.
 
     zip Sets the zip/postal code for the Weather::Google object. Takes a 5
         digit integer as an argument. Returns 1 on success.
@@ -61,6 +67,16 @@ METHODS
     city
         Sets the city for the Weather::Google object. Takes a string as an
         argument. Returns 1 if successful.
+
+    language
+        Optionally takes an ISO language code as an argument (i.e. "en",
+        "de") to set the language that is passed to the weather query for
+        proper localization. (Default: "en")
+
+        Supported language codes: "en", "da", "de", "es", "fi", "fr", "it",
+        "ja", "ko", "nl", "no", "pt-BR", "ru", "sv", "zh-CN", "zh-TW"
+
+        Returns the currently set ISO language code.
 
     current_conditions
         Method to report on current weather conditions. With no argument,
@@ -130,8 +146,8 @@ METHODS
          # Example 2:
          my $today = $gw->forecast_conditions(0);
          print "High: ".$today->{high}."\n";
- 
-         # Example 3:
+         
+ # Example 3:
          my $tom_high = $gw->forecast_conditions(1,'high');
          my $tue_low = $gw->forecast_conditions('Tue','low);
          print "Tomorrow's high is $tom_high and Tuesday's low is $tue_low\n";
