@@ -12,6 +12,7 @@ my $build = Module::Build->new (
 		'Test::More'   => 0,
 		'Test::Simple' => 0,
 		'Test::Pod'    => 0,
+        'Test::Warn'   => 0,
     },
 	requires => {
 		'LWP::Simple'  => 0,
