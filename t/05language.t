@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 7;
+use Test::More tests => 12;
 use Test::Warn;
 
 use Weather::Google;
@@ -21,6 +21,17 @@ $gw = new Weather::Google("Herne, Germany", {language => "de"});
 
 # 3
 is($gw->language(), "de", "set language via new(): 'de'");
+is($gw->encoding, "latin1", "de is latin1 encoding.");
+
+
+$gw->language("ja");
+is($gw->language(), "ja", "set language via language(): 'ja'");
+
+$gw = new Weather::Google("Tokyo, Japan", {language => "ja"});
+
+is($gw->language(), "ja", "set language via new(): 'ja'");
+is($gw->encoding, "utf-8", "ja is utf-8 encoding.");
+
 
 # 4
 warning_like {
@@ -30,6 +41,7 @@ warning_like {
 
 # 5
 is($gw->language(), undef, "set unsupported language via new(): not set");
+is($gw->encoding, 'utf-8', "unsupported language encoding: default utf-8");
 
 # 6
 warning_like {
