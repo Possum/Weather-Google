@@ -275,7 +275,7 @@ sub AUTOLOAD {
 
 1;
 
-__END__;
+__END__
 
 =head1 NAME
 
@@ -605,16 +605,11 @@ temp_f() as an implied alias for current_conditions('temp_f'), and so on.
 
 Daniel LeWarne C<< <possum at cpan.org> >>
 
+=head1 CREDITS
+
+Some of the localization code provided by Alex Linke.
+
 =head1 BUGS
-
-Google's XML files occasionally sends invalid UTF-8.  Google::Weather can
-generally compensate for this, bu if you would like to force Google::Weather to
-strip utf8 characters instead of trying to re-encode them, you can say
-
- use Weather::Google;
- $Weather::Google::ENCODE=0;
-
-to force non-ASCII characters to be stripped from the output.
 
 Please report any bugs or feature requests to C<bug-weather-google at
 rt.cpan.org>, or through the web interface at
