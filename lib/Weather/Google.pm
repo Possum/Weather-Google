@@ -613,6 +613,39 @@ L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Weather-Google>.  I will be
 notified, and then you'll automatically be notified of progress on your bug as
 I make changes.
 
+=head1 SUPPORT
+
+You can find documentation for this module with the perldoc command.
+
+    perldoc Weather::Google
+
+
+You can also look for information at:
+
+=over 4
+
+=item * RT: CPAN's request tracker
+
+L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=Weather-Google>
+
+=item * AnnoCPAN: Annotated CPAN documentation
+
+L<http://annocpan.org/dist/Weather-Google>
+
+=item * CPAN Ratings
+
+L<http://cpanratings.perl.org/d/Weather-Google>
+
+=item * Search CPAN
+
+L<http://search.cpan.org/dist/Weather-Google/>
+
+=item * Source code repository on GitHub
+
+L<http://github.com/possum/Weather-Google/>
+
+=back
+
 =head1 ACKNOWLEDGEMENTS
 
 Some of the localization code provided by Alex Linke.
@@ -631,3 +664,4 @@ This (very briefly) discusses the Weather API
 
 L<http://toolbar.google.com/buttons/apis/howto_guide.html>
 
+=cut
