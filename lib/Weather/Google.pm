@@ -605,10 +605,6 @@ temp_f() as an implied alias for current_conditions('temp_f'), and so on.
 
 Daniel LeWarne C<< <possum at cpan.org> >>
 
-=head1 CREDITS
-
-Some of the localization code provided by Alex Linke.
-
 =head1 BUGS
 
 Please report any bugs or feature requests to C<bug-weather-google at
@@ -616,6 +612,11 @@ rt.cpan.org>, or through the web interface at
 L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Weather-Google>.  I will be
 notified, and then you'll automatically be notified of progress on your bug as
 I make changes.
+
+=head1 ACKNOWLEDGEMENTS
+
+Some of the localization code provided by Alex Linke.
+
 
 =head1 COPYRIGHT
 
