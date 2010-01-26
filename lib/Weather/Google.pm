@@ -10,7 +10,7 @@ $ENCODE = 1 if eval { require Encode };
 
 our $ENCODING = 'utf-8';
 
-our $VERSION = 0.04;
+our $VERSION = 0.05;
 our $AUTOLOAD;
 use constant GAPI => 'http://www.google.com/ig/api?weather=';
 
