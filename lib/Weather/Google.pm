@@ -4,13 +4,14 @@ use strict;
 use warnings;
 use LWP::Simple qw/get/;
 use XML::Simple;
+use Carp;
 
 our $ENCODE;
 $ENCODE = 1 if eval { require Encode };
 
 our $ENCODING = 'utf-8';
 
-our $VERSION = 0.05;
+our $VERSION = 0.06;
 our $AUTOLOAD;
 use constant GAPI => 'http://www.google.com/ig/api?weather=';
 
@@ -36,6 +37,7 @@ my %DEFAULT_ENCODINGS = (
 
 sub new {
 	my ( $class, $area, $opt ) = @_;
+    carp "Weather::Google is deprecated.  Please use a different weather provider.";
     my $self = {};
 	bless ($self,$class);
 
@@ -57,6 +59,8 @@ sub new {
 
 sub _location_url {
     my ( $self, $loc ) = @_;
+    warn "Weather::Google is deprecated.";
+    return "";
     # TODO This should be modified to support, i.e., a hash of parameters.
     my $url = GAPI . $loc;
     my $lang = $self->language;
@@ -285,7 +289,28 @@ Weather::Google - Perl interface to Google's Weather API
 
 =head1 VERSION
 
-Version 0.03
+Version 0.06
+
+=cut
+
+=head1 DEPRECATION
+
+B<This module is now deprecated>.
+
+Some time in August 2012, Google unexpectedly pulled the plug on the iGoogle
+Weather API (it was allegedly "undocumented" at the time, though there was at
+least documentation when this module was written originally in 2008).  Since
+there is appears to be no intention of reviving the service, this module is
+being deprecated.
+
+While there are unfortunately no drop-in replacements (this module heavily
+leveraged the simplicity and flexibility of Google's API), please consider using
+one of the many other weather modules, on CPAN, such as L<Weather::Underground>
+- most of the other weather modules are more powerful than Google::Weather ever
+was.
+
+The module will no longer work, instead giving deprecation warnings when called.
+The documentation remains for historical purposes.
 
 =cut
 

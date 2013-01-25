@@ -17,6 +17,7 @@ my $build = Module::Build->new (
 	requires => {
 		'LWP::Simple'  => 0,
 		'XML::Simple'  => 0,
+		'Carp'         => 0,
 	},
 );
 $build->create_build_script;

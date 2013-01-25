@@ -3,7 +3,8 @@
 use strict;
 use warnings;
 
-use Test::More tests => 12;
+# use Test::More tests => 12;
+use Test::Simple skip_all => "Deprecated";
 use Test::Warn;
 
 use Weather::Google;

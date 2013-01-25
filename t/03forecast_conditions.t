@@ -5,7 +5,8 @@ use warnings;
 
 use Weather::Google;
 
-use Test::More;
+# use Test::More;
+use Test::Simple skip_all => "Deprecated";
 
 # There are 5+3(n)+(3*11)(n) tests. 
 
